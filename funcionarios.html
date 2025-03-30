@@ -45,6 +45,10 @@
         </tbody>
     </table>
 
+    <h2>Relatórios</h2>
+    <button onclick="gerarRelatorios()">Gerar Relatórios</button>
+    <pre id="relatorios"></pre>
+
     <script>
         class Funcionario {
             constructor(nome, idade, cargo, salario) {
@@ -106,6 +110,20 @@
             document.getElementById("cargo").value = funcionarios[index].cargo;
             document.getElementById("salario").value = funcionarios[index].salario;
             editIndex = index;
+        };
+
+        const gerarRelatorios = () => {
+            const salariosAltos = funcionarios.filter(f => f.salario > 5000);
+            const mediaSalarial = funcionarios.reduce((acc, f) => acc + f.salario, 0) / funcionarios.length || 0;
+            const cargosUnicos = [...new Set(funcionarios.map(f => f.cargo))];
+            const nomesMaiusculos = funcionarios.map(f => f.nome.toUpperCase());
+
+            document.getElementById("relatorios").textContent = `
+            Funcionários com salário acima de R$ 5000: ${salariosAltos.map(f => f.toString()).join("\n")}
+            Média salarial: R$ ${mediaSalarial.toFixed(2)}
+            Cargos únicos: ${cargosUnicos.join(", ")}
+            Nomes em maiúsculo: ${nomesMaiusculos.join(", ")}
+            `;
         };
     </script>
 </body>
