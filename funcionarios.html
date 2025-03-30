@@ -54,37 +54,28 @@
                 this.salario = salario;
             }
 
-            toString() {
-                return `${this.nome}, ${this.idade} anos, ${this.cargo}, R$ ${this.salario}`;
-            }
+            toString = () => `${this.nome}, ${this.idade} anos, ${this.cargo}, R$ ${this.salario}`;
         }
 
         const funcionarios = [];
         let editIndex = -1;
 
-        document.getElementById("funcionarioForm").addEventListener("submit", function(event) {
+        document.getElementById("funcionarioForm").addEventListener("submit", event => {
             event.preventDefault();
             const nome = document.getElementById("nome").value;
             const idade = parseInt(document.getElementById("idade").value);
             const cargo = document.getElementById("cargo").value;
             const salario = parseFloat(document.getElementById("salario").value);
 
-            if (editIndex === -1) {
-                const novoFuncionario = new Funcionario(nome, idade, cargo, salario);
-                funcionarios.push(novoFuncionario);
-            } else {
-                funcionarios[editIndex].nome = nome;
-                funcionarios[editIndex].idade = idade;
-                funcionarios[editIndex].cargo = cargo;
-                funcionarios[editIndex].salario = salario;
-                editIndex = -1;
-            }
+            editIndex === -1 ?
+                funcionarios.push(new Funcionario(nome, idade, cargo, salario)) :
+                Object.assign(funcionarios[editIndex], { nome, idade, cargo, salario }), editIndex = -1;
 
             atualizarTabela();
-            this.reset();
+            event.target.reset();
         });
 
-        function atualizarTabela() {
+        const atualizarTabela = () => {
             const tbody = document.getElementById("funcionariosTable");
             tbody.innerHTML = "";
             funcionarios.forEach((func, index) => {
@@ -105,20 +96,17 @@
                 deleteButton.onclick = () => excluirFuncionario(index);
                 actionsCell.appendChild(deleteButton);
             });
-        }
+        };
 
-        function excluirFuncionario(index) {
-            funcionarios.splice(index, 1);
-            atualizarTabela();
-        }
+        const excluirFuncionario = index => (funcionarios.splice(index, 1), atualizarTabela());
 
-        function editarFuncionario(index) {
+        const editarFuncionario = index => {
             document.getElementById("nome").value = funcionarios[index].nome;
             document.getElementById("idade").value = funcionarios[index].idade;
             document.getElementById("cargo").value = funcionarios[index].cargo;
             document.getElementById("salario").value = funcionarios[index].salario;
             editIndex = index;
-        }
+        };
     </script>
 </body>
 </html>
