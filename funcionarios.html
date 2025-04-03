@@ -1,39 +1,55 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <!-- Define o conjunto de caracteres para UTF-8 -->
     <meta charset="UTF-8">
+    <!-- Configura o viewport para dispositivos móveis -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Define o título da página -->
     <title>Gestão de Funcionários</title>
     <style>
+        /* Define o estilo da tabela */
         table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+            width: 100%; /* Largura total */
+            border-collapse: collapse; /* Remove espaços entre bordas */
+            margin-top: 20px; /* Espaçamento superior */
         }
+        /* Define o estilo das células da tabela */
         th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
+            border: 1px solid black; /* Borda preta */
+            padding: 8px; /* Espaçamento interno */
+            text-align: left; /* Alinhamento à esquerda */
         }
+        /* Define o estilo do cabeçalho da tabela */
         th {
-            background-color: #f2f2f2;
+            background-color: #f2f2f2; /* Cor de fundo cinza claro */
         }
     </style>
 </head>
 <body>
+    <!-- Título da seção de cadastro -->
     <h2>Cadastro de Funcionários</h2>
+    <!-- Formulário para cadastro de funcionários -->
     <form id="funcionarioForm">
+        <!-- Campo para o nome -->
         <label>Nome: <input type="text" id="nome" required></label>
+        <!-- Campo para a idade -->
         <label>Idade: <input type="number" id="idade" required></label>
+        <!-- Campo para o cargo -->
         <label>Cargo: <input type="text" id="cargo" required></label>
+        <!-- Campo para o salário -->
         <label>Salário: <input type="number" id="salario" required></label>
+        <!-- Botão para cadastrar -->
         <button type="submit">Cadastrar</button>
     </form>
     
+    <!-- Título da seção de lista de funcionários -->
     <h2>Lista de Funcionários</h2>
+    <!-- Tabela para exibir os funcionários cadastrados -->
     <table>
         <thead>
             <tr>
+                <!-- Cabeçalhos da tabela -->
                 <th>Nome</th>
                 <th>Idade</th>
                 <th>Cargo</th>
@@ -41,90 +57,19 @@
                 <th>Ações</th>
             </tr>
         </thead>
+        <!-- Corpo da tabela onde os dados serão inseridos dinamicamente -->
         <tbody id="funcionariosTable">
         </tbody>
     </table>
 
+    <!-- Título da seção de relatórios -->
     <h2>Relatórios</h2>
+    <!-- Botão para gerar relatórios -->
     <button onclick="gerarRelatorios()">Gerar Relatórios</button>
+    <!-- Área para exibir os relatórios -->
     <pre id="relatorios"></pre>
 
-    <script>
-        class Funcionario {
-            constructor(nome, idade, cargo, salario) {
-                this.nome = nome;
-                this.idade = idade;
-                this.cargo = cargo;
-                this.salario = salario;
-            }
-
-            toString = () => `${this.nome}, ${this.idade} anos, ${this.cargo}, R$ ${this.salario}`;
-        }
-
-        const funcionarios = [];
-        let editIndex = -1;
-
-        document.getElementById("funcionarioForm").addEventListener("submit", event => {
-            event.preventDefault();
-            const nome = document.getElementById("nome").value;
-            const idade = parseInt(document.getElementById("idade").value);
-            const cargo = document.getElementById("cargo").value;
-            const salario = parseFloat(document.getElementById("salario").value);
-
-            editIndex === -1 ?
-                funcionarios.push(new Funcionario(nome, idade, cargo, salario)) :
-                Object.assign(funcionarios[editIndex], { nome, idade, cargo, salario }), editIndex = -1;
-
-            atualizarTabela();
-            event.target.reset();
-        });
-
-        const atualizarTabela = () => {
-            const tbody = document.getElementById("funcionariosTable");
-            tbody.innerHTML = "";
-            funcionarios.forEach((func, index) => {
-                const row = tbody.insertRow();
-                row.insertCell(0).textContent = func.nome;
-                row.insertCell(1).textContent = func.idade;
-                row.insertCell(2).textContent = func.cargo;
-                row.insertCell(3).textContent = `R$ ${func.salario.toFixed(2)}`;
-                
-                const actionsCell = row.insertCell(4);
-                const editButton = document.createElement("button");
-                editButton.textContent = "Editar";
-                editButton.onclick = () => editarFuncionario(index);
-                actionsCell.appendChild(editButton);
-                
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "Excluir";
-                deleteButton.onclick = () => excluirFuncionario(index);
-                actionsCell.appendChild(deleteButton);
-            });
-        };
-
-        const excluirFuncionario = index => (funcionarios.splice(index, 1), atualizarTabela());
-
-        const editarFuncionario = index => {
-            document.getElementById("nome").value = funcionarios[index].nome;
-            document.getElementById("idade").value = funcionarios[index].idade;
-            document.getElementById("cargo").value = funcionarios[index].cargo;
-            document.getElementById("salario").value = funcionarios[index].salario;
-            editIndex = index;
-        };
-
-        const gerarRelatorios = () => {
-            const salariosAltos = funcionarios.filter(f => f.salario > 5000);
-            const mediaSalarial = funcionarios.reduce((acc, f) => acc + f.salario, 0) / funcionarios.length || 0;
-            const cargosUnicos = [...new Set(funcionarios.map(f => f.cargo))];
-            const nomesMaiusculos = funcionarios.map(f => f.nome.toUpperCase());
-
-            document.getElementById("relatorios").textContent = `
-            Funcionários com salário acima de R$ 5000: ${salariosAltos.map(f => f.toString()).join("\n")}
-            Média salarial: R$ ${mediaSalarial.toFixed(2)}
-            Cargos únicos: ${cargosUnicos.join(", ")}
-            Nomes em maiúsculo: ${nomesMaiusculos.join(", ")}
-            `;
-        };
-    </script>
+    <!-- Inclusão do arquivo JavaScript -->
+    <script src="script.js"></script>
 </body>
 </html>
